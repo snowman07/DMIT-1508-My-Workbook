@@ -50,6 +50,8 @@
 
 ### ERD
 
+![Customer Order](./ERD.png)
+
 > TODO: *ERD Image here.*
 
 ----
