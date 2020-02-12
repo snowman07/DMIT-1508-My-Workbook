@@ -15,6 +15,9 @@ GO
  --- dropping of tables should be in reverse order*/
 
 
+IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Invoice')
+	DROP TABLE Invoice
+
 IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'StudentCourses')
 	DROP TABLE StudentCourses
 
@@ -43,7 +46,7 @@ CREATE TABLE Students
 	Surname			varchar(50)		
 		CONSTRAINT CK_Students_Surname
 --			CHECK (Surname LIKE '_%')	--- LIKE allows us to do a "pattern-match"
-			CHECK (Surname LIKE '[a-z][a-z]')	-- two letter plus any other chars
+			CHECK (Surname LIKE '[a-z][a-z]%')	-- two letter plus any other chars
 --								\  1/ \ 1   /
 		--	Positive match for 'Fred'
 		--	Positive match for 'Wu'
@@ -102,8 +105,8 @@ CREATE TABLE StudentCourses
 					[Status] = 'C' OR
 					[Status] = 'W')
 		--	CHECK ([Status] IN ('E', 'C', 'W'))
-		CONSTRAINT DF_StudetnCourses_Status
-			DEFAULT ('E')
+		--	CONSTRAINT DF_StudentCourses_Status
+		--	DEFAULT ('E')
 									NOT NULL,
 
 	-- Table-level definition for Composite Primary Keys
@@ -147,3 +150,32 @@ ALTER TABLE Students
 		CHECK (PostalCode LIKE '[A-Z][0-9][A-Z][0-9][A-Z][0-9]')
 		-- Match for T4R1H2:	  T    4    R    1    H    2
 GO	-- third batch
+
+
+
+
+--|	Class Discussion February 11, 2020	|
+-------------------------------------------
+-------------------------------------------
+
+-- 3) Add a default constraint for the Status column of StudentCourses
+--		Set 'E' as the default value.
+ALTER TABLE StudentCourses
+	ADD CONSTRAINT DF_StudentCourses_Status
+		DEFAULT ('E') FOR [Status]	--	In an ALTER TABLE statement, the column must be
+									--	specified for the default value
+GO
+
+
+/*-----------------Odds and Ends----------------*/
+sp_help Students	--	Get schema information for the Students table
+
+--In a table, we can have some columns be "calculated" or "derived" columns
+--where the value of the column is a calculation from other columns.
+CREATE TABLE Invoice
+(
+	InvoiceID		int			NOT NULL,
+	SubTotal		money		NOT NULL,
+	GST				money		NOT NULL,
+	Total			AS SubTotal + GST		--This is a computed column
+)
