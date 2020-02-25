@@ -1,7 +1,7 @@
 --SIMPLE SELECT EXERCISE 1
 
 USE [A01-School]
-GO
+GO  --Tells it to run the above code as a "batch"
 
 -- Simple Select, without any other clauses
 SELECT  'Dan', 'Gilleland'
@@ -28,7 +28,7 @@ FROM    Club
 -- Notice that when selecting from an existing table, when we identify which columns we want to
 -- show, then those column names are used as the column title for the results table.
 -- The AS keyword  in the SELECT clause is used to assign a title to the column in the results table
-SELECT  ClubId AS 'ID', ClubName
+SELECT  ClubId AS 'ID', ClubName --AS represents an alias for the column
 FROM    Club
 
   -- Pro-Tip: Press [ctrl] + r to toggle the results window
@@ -49,7 +49,7 @@ FROM    Student
 --      and sort the results by the last name
 SELECT    FirstName, LastName
 FROM      Student
-ORDER BY  LastName
+ORDER BY  LastName --By default, sorting will be in ASCENDING ORDER
 -- 2.d. Select the first and last names of all the students,
 --      and sort the results by the last name, then by the first name
 SELECT    FirstName, LastName
@@ -70,7 +70,7 @@ WHERE  CourseID = 'DMIT101'
 
 --5. Select the Staff names who have job positionID of 3
 SELECT FirstName, LastName
-       --,PositionID -- Press [ctrl] + k, then [ctrl] + u to un-comment
+--       ,PositionID -- Press [ctrl] + k, then [ctrl] + u to un-comment
 FROM   Staff
 WHERE  PositionID = 3
 
@@ -78,9 +78,13 @@ WHERE  PositionID = 3
 SELECT  PositionID, PositionDescription
 FROM    Position
 
+-- Explore Intellisense
+SELECT C.ClubId, C.ClubName
+FROM    Club AS C
+
 --6.    Select the Course Names whose course hours are less than 96
 SELECT  C.CourseName
-FROM    Course C -- I can have an alias to the table name
+FROM    Course AS C -- I can have an alias to the table name
 WHERE   C.CourseHours < 96
 -- Type with me the following...
 SELECT  ST.LastName, ST.DateHired, ST.DateReleased
@@ -106,6 +110,7 @@ WHERE   WithdrawYN IS NULL -- we use IS NULL instead of = NULL, because = NULL w
 
 -- 7.b. Select the student ids of students who have withdrawn from a course
 SELECT  StudentID
+        , WithdrawYN
 FROM    Registration
 WHERE   WithdrawYN = 'Y'
 
@@ -143,9 +148,23 @@ WHERE   CourseID LIKE '____1%' -- four underscores, 1, %
 --                     DMIT158
 
 --11. Select the CourseID's and CourseNames where the CourseName contains the word 'programming'
+SELECT C.CourseId, C.CourseName
+FROM Course AS C
+Where C.CourseName LIKE '%programming%'
+--other answer
+SELECT CourseId, CourseName
+FROM Course
+WHERE CourseName LIKE '%programming%'
 
 --12. Select all the ClubNames who start with N or C.
-
+SELECT ClubName
+FROM Club
+WHERE ClubName LIKE 'N%' AND ClubName LIKE 'C%'
 --13. Select Student Names, Street Address and City where the lastName is only 3 letters long.
-
+SELECT FirstName, LastName, StreetAddress, City
+FROM Student
+WHERE LastName LIKE '___'
 --14. Select all the StudentID's where the PaymentAmount < 500 OR the PaymentTypeID is 5
+SELECT StudentID
+FROM Payment
+WHERE Amount < 500 AND PaymentTypeID = 5
