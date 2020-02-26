@@ -2,6 +2,13 @@
 USE [A01-School]
 GO
 
+--- We express relationships between tables in our design through FK
+-- constraints. But those constraints simply checks/restricts info that 
+-- is stored in the FK column. It doesn't actually physically "connect the tables" - all tables are independent.
+-- That means when we try to query information from multiple related tables,
+-- we have to state the connection of the tables. That is, we have to state how
+-- the tables JOIN together
+
 --1.	Select Student full names and the course ID's they are registered in.
 SELECT  FirstName + ' ' + LastName AS 'Full Name',
         CourseId
@@ -22,13 +29,24 @@ FROM    Student AS S
 
 --2.	Select the Staff full names and the Course ID's they teach.
 --      Order the results by the staff name then by the course Id
-SELECT  DISTINCT -- The DISTINCT keyword will remove duplate rows from the results
+SELECT DISTINCT -- The DISTINCT keyword will remove duplate rows from the results
         FirstName + ' ' + LastName AS 'Staff Full Name',
         CourseId
 FROM    Staff S
     INNER JOIN Registration R
         ON S.StaffID = R.StaffID
 ORDER BY 'Staff Full Name', CourseId
+
+
+-- Alternate answer ?
+SELECT FirstName + ' ' + LastName AS 'Full Name',
+       CourseId
+FROM Staff AS S
+    INNER JOIN Registration AS R
+        ON S.StaffID = R.StaffID
+GROUP BY FirstName, LastName, CourseId
+
+
 
 --3.	Select all the Club ID's and the Student full names that are in them
 -- TODO: Student Answer Here...

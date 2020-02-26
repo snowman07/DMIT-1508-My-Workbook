@@ -15,7 +15,7 @@ ORDER BY CourseId
 SELECT  CourseId,                   -- This column is a non-aggregate
         AVG(Mark) AS 'Average Mark' -- This column performs Aggregate (produce 1 value)
 FROM    Registration
-GROUP BY CourseId                   -- Group by the non-aggregate columns
+GROUP BY CourseId                   -- Group by the non-aggregate columns --- GROUP BY should always be here when querying aggregate and non-aggregate
 -- When performing an Aggregate function in the SELECT clause, if you have any other 
 -- non-aggregate columns in the SELECT clause, then these must be listed in the GROUP BY clause.
 
@@ -30,7 +30,7 @@ SELECT  PaymentTypeID,                              -- Non-aggregate column (btw
         COUNT(PaymentTypeID) AS 'Count of Pay Type' -- Aggregate column
 FROM    Payment
 GROUP BY PaymentTypeID
-ORDER BY COUNT(PaymentTypeID) ASC
+ORDER BY COUNT(PaymentTypeID) DESC -- Fixed! Now in descending order --- by defult, display is ascending (ASC)
 -- HELP! Is the answer above correct?? How can we fix it?
 /* A note on ORDER BY
    - The ORDER BY clause will, by default, do the sorting in ascending order.
@@ -40,7 +40,11 @@ ORDER BY COUNT(PaymentTypeID) ASC
  */
 
 -- 3. Select the average Mark for each studentID. Display the StudentId and their average mark
--- TODO: Student Answer Here....
+-- TODO: Student Answer Here....???
+SELECT StudentId,
+    AVG(Mark) AS 'Ave Mark'
+FROM Registration
+GROUP BY StudentID
 
 -- 4. Select the same data as question 3 but only show the studentID's and averages that are > 80
 SELECT StudentID,
@@ -73,7 +77,9 @@ GROUP BY PaymentTypeID
 
 
 -- 8. How many students are there in each club? Show the clubID and the count
--- TODO: Student Answer Here....
+-- TODO: Student Answer Here....??
+SELECT ClubId, StudentID
+FROM Activity
 
 -- Check your answer by manually grouping students by their club membership and counting them
 SELECT  ClubId, StudentID
@@ -81,9 +87,14 @@ FROM    Activity
 
 -- 9. Which clubs have 3 or more students in them?
 -- TODO: Student Answer Here....
+SELECT ClubId
+FROM Activity
+WHERE StudentID > 3
 
 
 --10. Grouping the courses by the number of hours in each course, what is the average cost of those courses? Display the course hours and the average cost.
+SELECT CourseHours
+FROM Course
 
 --11. Which teachers are getting the best results from the courses they teach? Display the staff ID and the average course mark, sorted by the course mark from highest to lowest.
 
