@@ -3,6 +3,15 @@ USE [A01-School]
 GO
 
 --1. How many staff are there in each position? Select the number and Position Description
+-- Exploration
+SELECT PositionID, PositionDescription FROM Position
+SELECT FirstName + '' + LastName, PositionID FROM Staff
+-- Show the date when joined
+SELECT PositionDescription, FirstName + ' ' + LastName
+FROM Staff AS S
+	INNER JOIN Position AS P
+		ON S.PositionID = P.PositionID
+-- Answer
 SELECT  PositionDescription,                    --  <-- non-aggregate
         COUNT(S.StaffID) AS 'Number of Staff'   --  <-- aggregate
 FROM    Staff AS S
@@ -25,7 +34,9 @@ ORDER BY 'Average Mark' DESC
 
 --3. How many payments where made for each payment type. Display the PaymentTypeDescription and the count.
  -- TODO: Student Answer Here... 
-
+SELECT Payment 
+FROM PaymentType
+WHERE 
  
 --4. Select the average Mark for each student. Display the Student Name and their average mark. Use table aliases in your FROM & JOIN clause.
 SELECT  S.FirstName  + ' ' + S.LastName AS 'Student Name',

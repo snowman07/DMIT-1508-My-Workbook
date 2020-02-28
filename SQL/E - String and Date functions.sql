@@ -29,6 +29,8 @@ GO
 	-- Modifying
 		-- LTRIM, RTRIM -- To remove whitespace from the left or the right
 		-- UPPER, LOWER -- Return upper and lower characters
+	-- Search a string for another string
+	SELECT CHARINDEX('', 'Hello World')
 
 -- Date Functions
 	-- GETDATE()
@@ -72,10 +74,10 @@ WHERE   FirstName = 'Tess'
 SELECT  DATEDIFF(dd, 'Jan 1, 2000', GETDATE())
 
 -- 3. How Many Students where born in each month? Display the Month Name and the Number of Students.
-SELECT  DATENAME(mm, Birthdate) AS 'Month Name',
-        COUNT(1) AS 'Number of Students'
+SELECT  DATENAME(mm, Birthdate) AS 'Month Name', -- no-aggregate
+        COUNT(1) AS 'Number of Students'			-- aggregate
 FROM    Student
-GROUP BY DATENAME(mm, Birthdate)
+GROUP BY DATENAME(mm, Birthdate)					-- group by no-aggregates
 
 -- 4. Select the Names of all the students born in December.
 SELECT  FirstName, LastName
@@ -91,15 +93,25 @@ WHERE   Mark IS NOT NULL
   AND   LEFT(Semester, 4) = 2004
 
 -- 6. select last three characters of all the courses
-
+-- student answer.... ?
+SELECT LEN("CourseName", 3)
+FROM Course
+WHERE CourseName LIKE '%___'
 
 -- 7. Select the characters in the position description from characters 8 to 13 for PositionID 5
+-- student answer....
+
 
 
 -- 8. Select all the Student First Names as upper case.
+-- student answer....
 
 
 -- 9. Select the First Names of students whose first names are 3 characters long.
+-- student answer....
+SELECT FirstName AS 'First Name'
+FROM Student
+WHERE FirstName LIKE '___'
 
 
 /* ************************************************
