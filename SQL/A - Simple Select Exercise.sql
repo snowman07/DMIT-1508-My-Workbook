@@ -159,12 +159,12 @@ WHERE CourseName LIKE '%programming%'
 --12. Select all the ClubNames who start with N or C.
 SELECT ClubName
 FROM Club
-WHERE ClubName LIKE 'N%' AND ClubName LIKE 'C%'
+WHERE ClubName LIKE 'N%' OR ClubName LIKE 'C%'
 --13. Select Student Names, Street Address and City where the lastName is only 3 letters long.
 SELECT FirstName, LastName, StreetAddress, City
 FROM Student
 WHERE LastName LIKE '___'
 --14. Select all the StudentID's where the PaymentAmount < 500 OR the PaymentTypeID is 5
-SELECT StudentID
+SELECT StudentID, Amount, PaymentTypeID
 FROM Payment
 WHERE Amount < 500 AND PaymentTypeID = 5
