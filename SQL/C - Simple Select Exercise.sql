@@ -78,8 +78,10 @@ GROUP BY PaymentTypeID
 
 -- 8. How many students are there in each club? Show the clubID and the count
 -- TODO: Student Answer Here....??
-SELECT ClubId, StudentID
+SELECT ClubId, 
+        COUNT(StudentID) AS 'Student Count'
 FROM Activity
+GROUP BY ClubId
 
 -- Check your answer by manually grouping students by their club membership and counting them
 SELECT  ClubId, StudentID
@@ -87,9 +89,11 @@ FROM    Activity
 
 -- 9. Which clubs have 3 or more students in them?
 -- TODO: Student Answer Here....
-SELECT ClubId
+SELECT ClubId,
+        COUNT(StudentID) AS 'Student Count' 
 FROM Activity
-WHERE StudentID > 3
+GROUP BY ClubId
+HAVING COUNT(StudentID) >= 3
 
 
 --10. Grouping the courses by the number of hours in each course, what is the average cost of those courses? Display the course hours and the average cost.
