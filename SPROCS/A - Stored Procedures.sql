@@ -18,6 +18,13 @@ AS
     -- Body of procedure here
 RETURN
 GO
+
+To run the stored procedure, you simply have to call it with EXEC keyword,
+and pass in whatever data is needed for the parameters.
+
+EXEC SprocName ArgumentsList
+
+- where the ArgumentsList is a comma-separated list of values
 */
 
 
