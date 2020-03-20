@@ -97,8 +97,11 @@ AS
             BEGIN -- { -- This BEGIN/END is needed, because of two SQL statements
                 INSERT INTO Position(PositionDescription)
                 VALUES (@Description)
+                IF @@ERROR <> 0 --Added this
+                    RAISERROR('Failed to insert new job position', 16, 1)--Added this
+                ELSE    --Added this
                 -- Send back the database-generated primary key
-                SELECT @@IDENTITY -- This is a global variable
+                    SELECT @@IDENTITY -- This is a global variable
             END   -- }
         END   -- }
     END   -- }
@@ -129,6 +132,7 @@ AS
         FROM    Student S
             INNER JOIN Activity A ON A.StudentID = S.StudentID
         WHERE   A.ClubId = @ClubId
+        --SELECT @@ROWCOUNT --Added this
     END
 RETURN
 GO
