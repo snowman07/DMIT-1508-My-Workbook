@@ -4,6 +4,17 @@
 USE [A01-School]
 GO
 
+--What is a transaction?
+-- A transaction is typically needed when we do two or more of an insert/update/delete.
+-- A transaction must succeed or fail as a group
+-- How do we start a transaction?
+--  BEGIN TRANSACTION
+--      the BEGIN TRANSACTION only needs to be stated once
+-- To make a transaction succeed, we use the statement COMMIT TRANSACTION
+--      the COMMIT TRANSACTION should only be used once
+--   To make a transaction
+-- .......... there's more in here!
+
 /*
 IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = N'PROCEDURE' AND ROUTINE_NAME = 'SprocName')
     DROP PROCEDURE SprocName
@@ -34,6 +45,7 @@ AS
     BEGIN
         RAISERROR('All parameters are required (cannot be null)', 16, 1)
     END
+    -- we may be asked to do other validation // added this
     ELSE
     BEGIN
         -- Begin Transaction
@@ -78,6 +90,15 @@ AS
 RETURN
 GO
 
+-- Test my stored procedure
+-- sp_help TransferCourse
+-- SELECT * FROM Registration
+-- SELECT * FROM Course
+EXEC TransferCourse 199899200, '2004J', 'DMIT152', 'DMIT101'
+--Testing with "bad" data
+EXEC TransferCourse 5, '2004J', 'DMIT152', 'DMIT101'            --Bad StudentID
+EXEC TransferCourse 199899200, '2020J', 'DMIT152', 'DMIT101'    --Bad Semester
+EXEC TransferCourse 199899200, '2004J', 'DMIT101', 'DMIT999'    --Bad 
 
 -- 2. Add a stored procedure called AdjustMarks that takes in a course ID. The procedure should adjust the marks of all students for that course by increasing the mark by 10%. Be sure that nobody gets a mark over 100%.
 IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = N'PROCEDURE' AND ROUTINE_NAME = 'AdjustMarks')
