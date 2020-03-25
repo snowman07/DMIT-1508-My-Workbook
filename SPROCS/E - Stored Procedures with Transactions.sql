@@ -475,3 +475,24 @@ AS
 RETURN
 GO
 
+
+
+
+-- EXERCISE
+
+/*
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = N'PROCEDURE' AND ROUTINE_NAME = 'SprocName')
+    DROP PROCEDURE SprocName
+GO
+
+CREATE PROCEDURE SprocName
+    -- Parameters here
+AS
+    -- Body of preocedure here
+RETURN
+GO
+*/
+
+-- 1. Create stored procedure called DissolvedClub that will accept a club is as its parameter. Ensure that the club exists before attempting to dissolve the club. You are to dissolve the club by first removing all the members of the club and then removing the club itself.
+--      Delete the rows in the Activity table
+--      Delete the rows in the Club table
