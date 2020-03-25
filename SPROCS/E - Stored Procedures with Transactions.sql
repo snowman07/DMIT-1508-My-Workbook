@@ -217,7 +217,21 @@ AS
 RETURN
 
 GO
+-- TEst RegisterStudent
+-- SELECT * FROM Registration WHERE CourseId = 'DMIT152' AND Semester = '2004J'
+-- I'll use course 'DMIT152' and semester '2004J'
+-- SELECT * FROM Student
+--199912010--199966250--200011730--200122100--200312345--200322620--200494470--200494476
+-- SELECT * FROM Course WHERE CourseId = 'DMIT152'
+-- We already have student in this class/semester, let's add 4 more (the max class is 5)
+EXEC RegisterStudent 199912010, 'DMIT152', '2004J'
+EXEC RegisterStudent 199966250, 'DMIT152', '2004J'
+EXEC RegisterStudent 200011730, 'DMIT152', '2004J'
+EXEC RegisterStudent 200122100, 'DMIT152', '2004J'
+--Adding in a 6th student, we should get an error
+EXEC RegisterStudent 200312345, 'DMIT152', '2004J'
 
+GO
 -- 4. Add a stored procedure called WitnessProtection that erases all existence of a student from the database. The stored procedure takes the StudentID, first and last names, gender, and birthdate as parameters. Ensure that the student exists in the database before removing them (all the parameter values must match).
 IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = N'PROCEDURE' AND ROUTINE_NAME = 'WitnessProtection')
     DROP PROCEDURE WitnessProtection
@@ -302,7 +316,7 @@ GO
 CREATE PROCEDURE StudentPayment
     @StudentID      int,
     @PaymentAmount  money,
-    @PaymentTypeID  tinyint
+    @PaymentTypeID  tinyint --- wasn't specidified in the problem, but is required for an INSERT into the Payment table
 AS
     IF @StudentID IS NULL OR @PaymentAmount IS NULL OR @PaymentTypeID IS NULL
     BEGIN
@@ -338,7 +352,7 @@ AS
 RETURN
 GO
 
--- 6. Create a stored procedure called WithdrawStudent that accepts a StudentID, CourseId, and semester as parameters. Withdraw the student by updating their Withdrawn value to 'Y' and subtract 1/2 of the cost of the course from their balance. If the result would be a negative balance set it to 0.
+-- 6. Create a stored procedure called WithdrawStudent that accepts a StudentID, CourseId, and semester as parameters. Withdraw the student by updating their Withdrawn value to 'Y' and subtract 1/2 of the cost of the course from their balance. If the result would be a negative balance set it to 0. (the only reason we're not "really" giving a refund if they've paid because of the CHECK constraint on the BalanceOwing)
 IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = N'PROCEDURE' AND ROUTINE_NAME = 'WithdrawStudent')
     DROP PROCEDURE WithdrawStudent
 GO
@@ -420,7 +434,7 @@ AS
 RETURN
 GO
 
--- 7. Create a stored procedure called ArchiveStudentGrades that will accept a year and will archive all grade records from that year from the grade table to an ArchiveGrade table. Copy all the appropriate records from the grade table to the ArchiveGrade table and delete them from the grade table. The ArchiveGrade table will have the same definition as the grade table but will not have any constraints.
+-- 7. Create a stored procedure called ArchiveStudentGrades that will accept a year and will archive all grade records from that year from the registration table to an ArchiveGrade table. Copy all the appropriate records from the grade table to the ArchiveGrade table and delete them from the registration table. The ArchiveGrade table will have the same definition as the grade table but will not have any constraints.
 IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'ArchiveGrade')
     DROP TABLE ArchiveGrade
 
