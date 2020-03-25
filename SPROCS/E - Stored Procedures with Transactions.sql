@@ -478,11 +478,11 @@ AS
             IF @@ERROR <> 0
             BEGIN
                 RAISERROR ('Archive failed', 16, 1)
-                ROLLBACK TRANSACTION
+                ROLLBACK TRANSACTION    --Tell the db to "undo" the previous INSERT/UPDATE/DELETE statement since the transaction began
             END
             ELSE
             BEGIN
-                COMMIT TRANSACTION
+                COMMIT TRANSACTION -- Tell the db to "finalize" (make permanent) 
             END
         END
     END
