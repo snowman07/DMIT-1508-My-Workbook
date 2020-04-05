@@ -175,13 +175,13 @@ AS
     FROM    Course C
         LEFT OUTER JOIN Registration R ON C.CourseId = R.CourseId
     GROUP BY C.CourseName
-    HAVING COUNT(R.StudentID) <= ALL 
+    --HAVING COUNT(R.StudentID) <= ALL 
     -- Notice that the subquery uses a left outer join. This is so that it includes courses
     -- that do not yet have registrations (in which case, it will be a zero enrollment).
     -- An acceptable alternate would be this....
-    --HAVING COUNT(R.StudentID) <= ALL (SELECT COUNT(StudentID)
-    --                                  FROM   Registration
-    --                                  GROUP BY CourseId)
+    HAVING COUNT(R.StudentID) <= ALL (SELECT COUNT(StudentID)
+                                     FROM   Registration
+                                      GROUP BY CourseId)
 RETURN
 GO
 -- Run the above with the database as-is, and you will see five courses coming back.
@@ -190,6 +190,24 @@ INSERT INTO Course(CourseId, CourseName, CourseHours, CourseCost, MaxStudents)
 VALUES ('DMIT987', 'Advanced Logic', 90, 420.00, 12)
 
 --6. Create a stored procedure called "Provinces" to list all the students provinces.
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = N'PROCEDURE' AND ROUTINE_NAME = 'Provinces')
+    DROP PROCEDURE Provinces
+GO
+CREATE PROCEDURE Provinces
+    --Parameters here
+AS
+    --Body of procedure here
+    SELECT Province
+    FROM Student 
+RETURN
+GO
+
+EXEC Provinces
+
+--To check the number of srudents: --- there are 18 students
+SELECT DISTINCT FirstName + ' ' + LastName AS 'Student'
+FROM Student 
 
 --7. OK, question 6 was ridiculously simple and serves no purpose. Lets remove that stored procedure from the database.
 
