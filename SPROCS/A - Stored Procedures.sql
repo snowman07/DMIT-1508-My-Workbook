@@ -62,6 +62,24 @@ GO
 -- To actually execute (run) the stored procedure, you call EXEC
 EXEC HonorCourses
 
+--TRY OTHER ANSWER
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = N'PROCEDURE' AND ROUTINE_NAME = 'HonorCourses')
+    DROP PROCEDURE HonorCourses
+GO
+CREATE PROCEDURE HonorCourses
+AS
+    SELECT CourseName 
+    FROM Course C
+        INNER JOIN Registration R
+            ON C.CourseId = R.CourseId
+    --WHERE AVG(Mark) > 80  --WHERE doesnt work here because this is an aggregate function
+    GROUP BY CourseName
+    HAVING AVG(Mark) > 80
+RETURN
+GO
+
+EXEC HonorCourses
+
 
 --2. Create a stored procedure called "HonorCoursesOneTerm" to select all the course names that have average > 80% in semester 2004J.
 IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = N'PROCEDURE' AND ROUTINE_NAME = 'HonorCoursesOneTerm')
@@ -157,11 +175,7 @@ AS
     FROM    Course C
         LEFT OUTER JOIN Registration R ON C.CourseId = R.CourseId
     GROUP BY C.CourseName
-    HAVING COUNT(R.StudentID) <= ALL (SELECT COUNT(StudentID)
-                                      FROM   Course C
-                                          LEFT OUTER JOIN Registration R
-                                              ON C.CourseId = R.CourseId
-                                      GROUP BY C.CourseId)
+    HAVING COUNT(R.StudentID) <= ALL 
     -- Notice that the subquery uses a left outer join. This is so that it includes courses
     -- that do not yet have registrations (in which case, it will be a zero enrollment).
     -- An acceptable alternate would be this....
