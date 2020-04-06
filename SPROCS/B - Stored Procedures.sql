@@ -64,7 +64,8 @@ GO
 EXEC AddClub 'CLUB', 'Central Library of Unused Books' --- Testing with "good" data
 --- Imagine that the sproc is called with the BAD data...
 EXEC AddClub null, 'GOTCHA'
-EXEC AddClub null, 'OOPS'
+--EXEC AddClub null, 'OOPS'
+EXEC AddClub 'OOPS', null
 --- there's a code here
 GO
 
@@ -112,7 +113,7 @@ RETURN
 GO
 
 EXEC FindStudentClubs NULL  -- What do you predict the result will be?
-EXEC FindStudentClubs ''    -- What do you predict the result will be?
+EXEC FindStudentClubs 'ci'    -- What do you predict the result will be?
 GO
 ALTER PROCEDURE FindStudentClubs
     @PartialID      varchar(10)
