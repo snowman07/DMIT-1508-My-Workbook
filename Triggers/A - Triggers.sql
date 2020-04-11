@@ -171,12 +171,15 @@ SELECT * FROM Student WHERE BalanceOwing > 0
 
 --4. Our school DBA has suddenly disabled some Foreign Key constraints to deal with performance issues! Create a trigger on the Registration table to ensure that only valid CourseIDs, StudentIDs and StaffIDs are used for grade records. (You can use sp_help tablename to find the name of the foreign key constraints you need to disable to test your trigger.) Have the trigger raise an error for each foreign key that is not valid. If you have trouble with this question create the trigger so it just checks for a valid student ID.
 -- sp_help Registration -- then disable the foreign key constraints....
-ALTER TABLE Registration NOCHECK CONSTRAINT FK_GRD_CRS_CseID
+ALTER TABLE Registration NOCHECK CONSTRAINT FK_GRD_CRS_CseID --disable a constraint
 ALTER TABLE Registration NOCHECK CONSTRAINT FK_GRD_STF_StaID
 ALTER TABLE Registration NOCHECK CONSTRAINT FK_GRD_STU_StuID
 IF EXISTS (SELECT * FROM sys.triggers WHERE object_id = OBJECT_ID(N'[dbo].[Registration_InsertUpdate_EnforceForeignKeyValues]'))
     DROP TRIGGER Registration_InsertUpdate_EnforceForeignKeyValues
 GO
+
+
+
 
 CREATE TRIGGER Registration_InsertUpdate_EnforceForeignKeyValues
 ON Registration
@@ -188,7 +191,7 @@ AS
         -- UPDATE(columnName) is a function call that checks to see if information between the 
         -- deleted and inserted tables for that column are different (i.e.: data in that column
         -- has changed).
-        IF UPDATE(StudentID) AND
+        IF UPDATE(StudentID) AND --the UPDATE keyword here is the UPDATE() function, not the UPDATE statement
            NOT EXISTS (SELECT * FROM inserted I INNER JOIN Student S ON I.StudentID = S.StudentID)
         BEGIN
             RAISERROR('That is not a valid StudentID', 16, 1)
@@ -211,11 +214,28 @@ AS
     END
 RETURN
 GO
+-- Test the trigger  (on the Registration table)
+SELECT * FROM Registration
+-- Let's modify this record: 199899200 DMIT254 2005M 0.00 Y G
+-- Test with good data
+UPDATE  Registration
+SET     Mark = 65,
+        WithdrawYN = 'N'
+WHERE   StudentID = 199899200
+    AND CourseId = 'DMIT254'
+    AND Semester = '2005M'
+-- Test with bad data
+UPDATE  Registration
+SET     StaffID = 99    --there is no staff with ID 99
+WHERE   StudentID = 199899200
+    AND CourseId = 'DMIT254'
+    AND Semester = '2005M'
 
 -- 5. The school has placed a temporary hold on the creation of any more clubs. (Existing clubs can be renamed or removed, but no additional clubs can be created.) Put a trigger on the Clubs table to prevent any new clubs from being created.
 IF EXISTS (SELECT * FROM sys.triggers WHERE object_id = OBJECT_ID(N'[dbo].[Club_Insert_Lockdown]'))
     DROP TRIGGER Club_Insert_Lockdown
 GO
+
 
 CREATE TRIGGER Club_Insert_Lockdown
 ON Club
@@ -246,6 +266,7 @@ CREATE TABLE BalanceOwingLog
 )
 GO
 
+--Step2: Make a trigger
 IF EXISTS (SELECT * FROM sys.triggers WHERE object_id = OBJECT_ID(N'[dbo].[Student_Update_AuditBalanceOwing]'))
     DROP TRIGGER Student_Update_AuditBalanceOwing
 GO
