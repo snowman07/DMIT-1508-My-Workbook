@@ -29,7 +29,7 @@ GO
 
 -- Testing
 --  Good inputs
-EXEC ListStudentMarksByRange 70, 80
+EXEC ListStudentMarksByRange 70, 80     --SELECT * FROM Student
 --  Bad inputs
 EXEC ListStudentMarksByRange 80, 70
 EXEC ListStudentMarksByRange 70, NULL

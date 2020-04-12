@@ -61,7 +61,7 @@ GO
 
 
 -- Demo/test my stored procedure
-EXEC AddClub 'CLUS', 'Central Library of Unused Books' 
+EXEC AddClub 'CLUBS', 'Central Library of Unused Books' 
 GO--- Testing with "good" data
 --- Imagine that the sproc is called with the BAD data...
 EXEC AddClub null, 'GOTCHA'
@@ -114,9 +114,12 @@ AS
 RETURN
 GO
 
+
 EXEC FindStudentClubs NULL  -- What do you predict the result will be?
 EXEC FindStudentClubs 'ci'    -- What do you predict the result will be?
 GO
+--SELECT * FROM Club
+
 ALTER PROCEDURE FindStudentClubs
     @PartialID      varchar(10)
 AS
