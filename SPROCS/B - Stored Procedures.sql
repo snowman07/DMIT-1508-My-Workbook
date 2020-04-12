@@ -61,9 +61,11 @@ GO
 
 
 -- Demo/test my stored procedure
-EXEC AddClub 'CLUB', 'Central Library of Unused Books' --- Testing with "good" data
+EXEC AddClub 'CLUS', 'Central Library of Unused Books' 
+GO--- Testing with "good" data
 --- Imagine that the sproc is called with the BAD data...
 EXEC AddClub null, 'GOTCHA'
+GO
 --EXEC AddClub null, 'OOPS'
 EXEC AddClub 'OOPS', null
 --- there's a code here

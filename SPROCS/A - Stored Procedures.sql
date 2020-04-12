@@ -52,11 +52,12 @@ CREATE PROCEDURE HonorCourses
     -- Parameters here
 AS
     -- Body of procedure here
-    SELECT C.CourseName
+    SELECT C.CourseName --, AVG(R.Mark) AS 'More than 80% average'
     FROM   Course C
         INNER JOIN Registration R ON C.CourseId = R.CourseId
     GROUP BY C.CourseName
     HAVING AVG(R.Mark) > 80
+    --ORDER BY C.CourseName, AVG(R.Mark)
 RETURN
 GO
 -- To actually execute (run) the stored procedure, you call EXEC
@@ -87,12 +88,13 @@ IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = N'PROC
 GO
 CREATE PROCEDURE HonorCoursesOneTerm
 AS
-    SELECT C.CourseName
+    SELECT C.CourseName --, AVG(R.Mark), R.Semester
     FROM   Course C
         INNER JOIN Registration R ON C.CourseId = R.CourseId
     WHERE  R.Semester = '2004J'
-    GROUP BY C.CourseName
+    GROUP BY C.CourseName --, R.Semester
     HAVING AVG(R.Mark) > 80
+    --ORDER BY C.CourseName, AVG(R.Mark)
 RETURN
 GO
 EXEC HonorCoursesOneTerm
@@ -107,6 +109,10 @@ AS
     GROUP BY C.CourseName
     HAVING AVG(R.Mark) > 80
 RETURN
+GO
+
+--To test
+EXEC HonorCoursesOneTerm
 GO
 
 --3.B. Your instructor is back, and recommends that the previous stored procedure use a parameter for the semester, making it more "re-usable"
@@ -149,7 +155,7 @@ IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = N'PROC
 GO
 CREATE PROCEDURE NotInCourse
     -- Parameters here
-    @CourseNumber   char(7)
+    @CourseNumber   char(7) --parameter doesnt necessarily mean that it is an attribute in the table. 
 AS
     -- Body of procedure here
     SELECT  DISTINCT FirstName + ' ' + LastName AS 'Student Name'        
