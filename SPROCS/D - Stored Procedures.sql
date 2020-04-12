@@ -36,7 +36,7 @@ AS
     END   -- }
     ELSE
     BEGIN -- {
-        IF LEN(@Description) < 5
+        IF LEN(@Description) < 5 OR Len(@Description) > 50
         BEGIN -- {
             RAISERROR('Description must be between 5 and 50 characters', 16, 1)
         END   -- }
@@ -63,13 +63,13 @@ GO
 
 EXEC AddPosition 'The Boss'
 EXEC AddPosition NULL -- This should result in an error being raised
-EXEC AddPosition 'Me' -- This should result in an error being raised
+EXEC AddPosition 'Me' -- This should result in an error being raised    --parameter should atleast 5 characters
 EXEC AddPosition 'The Boss' -- This should result in an error as well (a duplicate)
--- This long string gets truncated at the parameter, because the parameter size is 50
-EXEC AddPosition 'The Boss of everything and everyone, everywhere and all the time, both past present and future, without any possible exception. Unless, of course, I''m not...'
+-- This long string gets truncated at the parameter --suppose to have an error but not getting an error probable bec no @@ERROR???
+EXEC AddPosition 'Still the Boss of everything and everyone, everywhere and all the time, both past present and future, without any possible exception. Unless, of course, I''m not...'
 EXEC AddPosition 'The Janitor'
 SELECT * FROM Position
--- DELETE FROM Position WHERE PositionID = 12
+-- DELETE FROM Position WHERE PositionID = 18
 GO
 
 ALTER PROCEDURE AddPosition
@@ -111,7 +111,11 @@ GO
 EXEC AddPosition 'Still the Boss of everything and everyone, everywhere and all the time, both past present and future, without any possible exception. Unless, of course, I''m not...'
 SELECT * FROM Position
 EXEC AddPosition 'Remote Instructor' --- Added this in class
+EXEC AddPosition 'The Boss'
+EXEC AddPosition NULL -- This should result in an error being raised
+EXEC AddPosition 'Me' -- This should result in an error being raised    --parameter should atleast 5 characters
 -- DELETE FROM Position WHERE PositionID = 12
+EXEC AddPosition 'TestInsert'
 
 -- 2) Create a stored procedure called LookupClubMembers that takes a club ID and returns the full names of all members in the club.
 IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = N'PROCEDURE' AND ROUTINE_NAME = 'LookupClubMembers')
@@ -137,11 +141,13 @@ AS
 RETURN
 GO
 
+SELECT * FROM Club
+SELECT * FROM Activity
 -- Test the above sproc
-EXEC LookupClubMembers 'CHESS'
-EXEC LookupClubMembers 'CSS'
-EXEC LookupClubMembers 'Drop Out'
-EXEC LookupClubMembers 'NASA1'
+EXEC LookupClubMembers 'CHESS'  --there's a result because CHESS is in Activity table 
+EXEC LookupClubMembers 'CSS'    --no result because CSS is not in Activity table but its in Club table, however, club is not INNER JOINed
+EXEC LookupClubMembers 'Drop Out' --there's an error because Drop out is not in Activity nor Club table
+EXEC LookupClubMembers 'NASA1'  --  --no result because CSS is not in Activity table but its in Club table, however, club is not INNER JOINed
 EXEC LookupClubMembers NULL
 
 -- 3) Create a stored procedure called RemoveClubMembership that takes a club ID and deletes all the members of that club. Be sure that the club exists. Also, raise an error if there were no members deleted from the club.
@@ -162,7 +168,7 @@ AS
         DELETE FROM Activity
         WHERE       ClubId = @ClubId
         -- Any Insert/Update/Delete will affect the global @@ROWCOUNT value
-        IF @@ROWCOUNT = 0
+        IF @@ROWCOUNT = 0                               --Also, raise an error if there were no members deleted from the club.
         BEGIN
             RAISERROR('No members were deleted', 16, 1)
         END
