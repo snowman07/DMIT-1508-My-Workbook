@@ -39,7 +39,7 @@ GO
 	SELECT DATENAME(MONTH, GETDATE()) AS 'Database Server- Current Month'
 	-- DATEPART - Similar to above
 	SELECT DATEPART(WEEKDAY, GETDATE()) AS 'Day of the week',
-	       DATENAME(WEEKDAY, GETDATE()) AS 'Day of the week'
+	       DATENAME(WEEKDAY, GETDATE()) AS 'Dayname of the week'
 	-- DAY
 	-- MONTH -- Birthdays this month - Student.Birthdate
     SELECT FirstName, MONTH(Birthdate) AS 'Birth Month' FROM Student
